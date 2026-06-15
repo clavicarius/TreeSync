@@ -13,16 +13,16 @@ permissions:
 jobs:
 
   build:
+
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        rid: [
-          win-x64,
-          linux-x64,
-          linux-arm64,
-          osx-arm64
-        ]
+        rid:
+          - win-x64
+          - linux-x64
+          - linux-arm64
+          - osx-arm64
 
     steps:
 
@@ -35,36 +35,35 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-          cache: true
 
       - name: Restore
         run: dotnet restore src/TreeSync.Cli/TreeSync.Cli.csproj
 
-      - name: Restore
-        run: dotnet restore src/TreeSync.Cli/TreeSync.Cli.csproj
-
-      - name: Publish
+      - name: Build & Publish
         run: |
           dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj \
             -c Release \
             -r ${{ matrix.rid }} \
             --self-contained true \
             -p:PublishSingleFile=true \
+            -p:Version=${{ github.run_number }} \
             -o publish/${{ matrix.rid }}
 
-      - name: Package
+      - name: Package (versioned artifact)
         run: |
+          VERSION=${{ github.run_number }}
           cd publish/${{ matrix.rid }}
-          zip -r ../../TreeSync-${{ matrix.rid }}.zip .
+          zip -r ../../TreeSync-v${VERSION}-${{ matrix.rid }}.zip .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: TreeSync-${{ matrix.rid }}
+          name: TreeSync-v${{ github.run_number }}-${{ matrix.rid }}
           path: TreeSync-*.zip
 
 
   release:
+
     needs: build
     runs-on: ubuntu-latest
 
@@ -88,7 +87,7 @@ jobs:
       - name: Install semantic-release
         run: |
           npm init -y
-          npm install semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github
+          npm install semantic-release @semantic-release/changelog @semantic-release/github
 
       - name: Run semantic-release
         env:
