@@ -13,16 +13,16 @@ permissions:
 jobs:
 
   build:
+
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        rid: [
-          win-x64,
-          linux-x64,
-          linux-arm64,
-          osx-arm64
-        ]
+        rid:
+          - win-x64
+          - linux-x64
+          - linux-arm64
+          - osx-arm64
 
     steps:
 
@@ -35,10 +35,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-          cache: true
 
       - name: Restore
-        run: dotnet restore src/TreeSync.Cli/TreeSync.Cli.csproj
+        run: dotnet restore TreeSync.sln
 
       - name: Restore
         run: dotnet restore src/TreeSync.Cli/TreeSync.Cli.csproj
@@ -88,7 +87,7 @@ jobs:
       - name: Install semantic-release
         run: |
           npm init -y
-          npm install semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github
+          npm install semantic-release @semantic-release/changelog @semantic-release/github
 
       - name: Run semantic-release
         env:
