@@ -68,7 +68,7 @@ public sealed class IgnoreRuleSet
         public static IgnoreRule Create(string rawPattern)
         {
             string normalized = PathUtils.NormalizeRelativePath(rawPattern.Trim());
-            bool isFolderRule = normalized.EndsWith('/', StringComparison.Ordinal);
+            bool isFolderRule = normalized.EndsWith("/", StringComparison.Ordinal);
             normalized = normalized.TrimEnd('/');
             bool matchesFileNameOnly = !normalized.Contains('/', StringComparison.Ordinal);
 
@@ -82,7 +82,7 @@ public sealed class IgnoreRuleSet
         public bool IsMatch(string relativePath)
         {
             string normalized = PathUtils.NormalizeRelativePath(relativePath).TrimEnd('/');
-            string matchValue = matchesFileNameOnly ? Path.GetFileName(normalized) : normalized;
+            string matchValue = matchesFileNameOnly ? Path.GetFileName(normalized) ?? string.Empty : normalized;
 
             if (regex is not null)
             {

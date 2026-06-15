@@ -15,7 +15,7 @@ public sealed class TreeSyncLogger : IDisposable
     {
         LogLevel = logLevel;
         this.consoleWriter = consoleWriter ?? Console.Out;
-        this.clock = clock ?? DateTimeOffset.Now;
+        this.clock = clock ?? (() => DateTimeOffset.Now);
 
         string? directory = Path.GetDirectoryName(Path.GetFullPath(logFilePath));
         if (!string.IsNullOrEmpty(directory))

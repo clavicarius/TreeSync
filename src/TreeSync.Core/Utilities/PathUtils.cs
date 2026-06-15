@@ -36,6 +36,6 @@ public static class PathUtils
 
     public static string GetNormalizedExtension(string path)
     {
-        return Path.GetExtension(path).ToLowerInvariant();
+        return (Path.GetExtension(path) ?? string.Empty).ToLowerInvariant();
     }
 }

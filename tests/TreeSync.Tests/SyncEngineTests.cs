@@ -39,6 +39,8 @@ public sealed class SyncEngineTests
         string targetFile = System.IO.Path.Combine(target, "index.php");
         File.WriteAllText(sourceFile, "new");
         File.WriteAllText(targetFile, "old");
+        File.SetLastWriteTimeUtc(sourceFile, new DateTime(2026, 6, 12, 14, 4, 21, DateTimeKind.Utc));
+        File.SetLastWriteTimeUtc(targetFile, new DateTime(2026, 6, 12, 14, 3, 21, DateTimeKind.Utc));
 
         RunSync(source, target, dryRun: false);
 
