@@ -1,0 +1,56 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "TreeSync CLI: Debug",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build: cli",
+      "program": "${workspaceFolder}/src/TreeSync.Cli/bin/Debug/net10.0/TreeSync.dll",
+      "args": [
+        "--source",
+        "${input:sourcePath}",
+        "--target",
+        "${input:targetPath}",
+        "--config",
+        "${input:configPath}",
+        "--ignore",
+        "${input:ignorePath}",
+        "--log",
+        "${workspaceFolder}/treesync.log",
+        "--log-level",
+        "debug",
+        "--dry-run"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    }
+  ],
+  "inputs": [
+    {
+      "id": "sourcePath",
+      "type": "promptString",
+      "description": "Source directory",
+      "default": "${workspaceFolder}/sample/source"
+    },
+    {
+      "id": "targetPath",
+      "type": "promptString",
+      "description": "Target directory",
+      "default": "${workspaceFolder}/sample/target"
+    },
+    {
+      "id": "configPath",
+      "type": "promptString",
+      "description": "Config file",
+      "default": "${workspaceFolder}/config.json"
+    },
+    {
+      "id": "ignorePath",
+      "type": "promptString",
+      "description": "Ignore file",
+      "default": "${workspaceFolder}/.treesyncignore"
+    }
+  ]
+}

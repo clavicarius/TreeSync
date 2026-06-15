@@ -5,6 +5,7 @@
     }
   ],
   "settings": {
+    "dotnet.defaultSolution": "TreeSync.sln",
     "cSpell.words": [
       "clausTrarius",
       "csdevkit",

@@ -150,6 +150,19 @@ dotnet test tests/TreeSync.Tests/TreeSync.Tests.csproj
 
 ---
 
+## VSCode/Cursor
+
+Die Workspace-Konfiguration liegt in `.vscode/`:
+
+- `launch.json`: Debug-Konfiguration `TreeSync CLI: Debug` mit Dry-Run
+- `tasks.json`: Tasks für Restore, Build, Test und Publish
+- `settings.json`: `TreeSync.sln` als Default-Solution
+- `extensions.json`: empfohlene C#/.NET-Erweiterungen
+
+Der Publish-Task `publish: win-x64 folder` erzeugt die Dateien im Ordner `publish`.
+
+---
+
 ## Exitcodes
 
 - `0`: Erfolg
