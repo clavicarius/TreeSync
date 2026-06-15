@@ -52,7 +52,7 @@ treesync/
 │
 ├─ config.json
 ├─ .treesyncignore
-├─ treesync.sln
+├─ TreeSync.sln
 └─ README.md
 
 ```

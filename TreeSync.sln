@@ -1,0 +1,34 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556F}") = "TreeSync.Cli", "src\TreeSync.Cli\TreeSync.Cli.csproj", "{80AA33BD-7A68-4C6A-A3B2-9613B9D2B9AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556F}") = "TreeSync.Core", "src\TreeSync.Core\TreeSync.Core.csproj", "{6C2F0EF0-1500-4D37-B79D-B54E94F549B5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556F}") = "TreeSync.Tests", "tests\TreeSync.Tests\TreeSync.Tests.csproj", "{82E35BDE-49D8-47C6-9B58-163537426C20}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{80AA33BD-7A68-4C6A-A3B2-9613B9D2B9AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80AA33BD-7A68-4C6A-A3B2-9613B9D2B9AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80AA33BD-7A68-4C6A-A3B2-9613B9D2B9AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80AA33BD-7A68-4C6A-A3B2-9613B9D2B9AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C2F0EF0-1500-4D37-B79D-B54E94F549B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C2F0EF0-1500-4D37-B79D-B54E94F549B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C2F0EF0-1500-4D37-B79D-B54E94F549B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C2F0EF0-1500-4D37-B79D-B54E94F549B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82E35BDE-49D8-47C6-9B58-163537426C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82E35BDE-49D8-47C6-9B58-163537426C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82E35BDE-49D8-47C6-9B58-163537426C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82E35BDE-49D8-47C6-9B58-163537426C20}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

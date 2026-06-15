@@ -39,6 +39,20 @@ Das Zielverzeichnis stellt damit stets eine synchronisierte Kopie der Quelle dar
 
 ---
 
+## Voraussetzungen
+
+- .NET 10 SDK
+
+Prüfen mit:
+
+```
+dotnet --list-sdks
+```
+
+Für Entwicklung, Build und Tests muss ein `10.x` SDK installiert sein, da alle Projekte `net10.0` targeten.
+
+---
+
 ## Projektstruktur
 
 Der Code folgt der Architektur aus `docs/architecture.md`:
@@ -86,8 +100,8 @@ Zeigt alle Aktionen an, ohne Änderungen vorzunehmen.
 ## Build und Tests
 
 ```
-dotnet build treesync.sln
-dotnet test treesync.sln
+dotnet build src/TreeSync.Cli/TreeSync.Cli.csproj
+dotnet test tests/TreeSync.Tests/TreeSync.Tests.csproj
 ```
 
 ---
