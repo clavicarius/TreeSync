@@ -35,7 +35,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-          cache: true
 
       - name: Restore
         run: dotnet restore src/TreeSync.Cli/TreeSync.Cli.csproj
@@ -62,7 +61,6 @@ jobs:
 
 
   release:
-
     needs: build
     runs-on: ubuntu-latest
 
@@ -81,7 +79,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install semantic-release
         run: |
