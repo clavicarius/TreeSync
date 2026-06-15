@@ -52,10 +52,26 @@ treesync/
 │
 ├─ config.json
 ├─ .treesyncignore
-├─ treesync.sln
+├─ TreeSync.sln
 └─ README.md
 
 ```
+
+---
+
+## Default Namespace
+
+Der Default Namespace des Projekts lautet:
+
+```
+clausTrarius.TreeSync
+```
+
+Die Teilprojekte verwenden daraus abgeleitete Namespaces:
+
+- `clausTrarius.TreeSync.Cli`
+- `clausTrarius.TreeSync.Core`
+- `clausTrarius.TreeSync.Tests`
 
 ---
 

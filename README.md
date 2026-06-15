@@ -35,6 +35,73 @@ Das Zielverzeichnis stellt damit stets eine synchronisierte Kopie der Quelle dar
 - Programmiersprache: C#
 - Runtime/SDK: .NET 10
 - Anwendungstyp: .NET Console App
+- Default Namespace: `clausTrarius.TreeSync`
+
+---
+
+## Voraussetzungen
+
+- .NET 10 SDK
+
+Prüfen mit:
+
+```
+dotnet --list-sdks
+```
+
+Für Entwicklung, Build und Tests muss ein `10.x` SDK installiert sein, da alle Projekte `net10.0` targeten.
+
+---
+
+## Projektstruktur
+
+Der Code folgt der Architektur aus `docs/architecture.md`:
+
+- `src/TreeSync.Cli`: CLI-Parsing, Top-Level-Fehlerbehandlung und Exitcodes
+- `src/TreeSync.Core`: Konfiguration, Logging, Ignore-Regeln, Scanning, Vergleich, Safety und Sync-Engine
+- `tests/TreeSync.Tests`: xUnit-Tests für die zentralen Komponenten
+
+---
+
+## Nutzung als EXE
+
+Für ein direkt startbares Windows-Executable muss das CLI-Projekt veröffentlicht werden:
+
+```powershell
+dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj `
+  -c Release `
+  -p:PublishProfile=win-x64-folder
+```
+
+Die erzeugten Dateien liegen danach hier:
+
+```text
+publish/TreeSync.exe
+publish/TreeSync.dll
+```
+
+Nach dem Publish kann `TreeSync.exe` direkt ohne Sourcecode verwendet werden.
+
+```powershell
+.\TreeSync.exe `
+  --source "C:\pfad\zur\quelle" `
+  --target "C:\pfad\zum\ziel" `
+  --config "C:\pfad\zur\quelle\config.json" `
+  --ignore "C:\pfad\zur\quelle\.treesyncignore" `
+  --log "treesync.log" `
+  --log-level info
+```
+
+`--config`, `--ignore`, `--log` und `--log-level` sind optional.
+
+Dry Run:
+
+```powershell
+.\TreeSync.exe `
+  --source "C:\pfad\zur\quelle" `
+  --target "C:\pfad\zum\ziel" `
+  --dry-run
+```
 
 ---
 
@@ -69,6 +136,39 @@ treesync --source ./src --target /var/www/app --dry-run
 ```
 
 Zeigt alle Aktionen an, ohne Änderungen vorzunehmen.
+
+---
+
+## Build und Tests
+
+```
+dotnet build src/TreeSync.Cli/TreeSync.Cli.csproj
+dotnet test tests/TreeSync.Tests/TreeSync.Tests.csproj
+```
+
+`dotnet build` ist für Entwicklung und Tests gedacht. Für eine verteilbare `.exe` bitte `dotnet publish` wie oben verwenden.
+
+---
+
+## VSCode/Cursor
+
+Die Workspace-Konfiguration liegt in `.vscode/`:
+
+- `launch.json`: Debug-Konfiguration `TreeSync CLI: Debug` mit Dry-Run
+- `tasks.json`: Tasks für Restore, Build, Test und Publish
+- `settings.json`: `TreeSync.sln` als Default-Solution
+- `extensions.json`: empfohlene C#/.NET-Erweiterungen
+
+Der Publish-Task `publish: win-x64 folder` erzeugt die Dateien im Ordner `publish`.
+
+---
+
+## Exitcodes
+
+- `0`: Erfolg
+- `1`: CLI- oder Konfigurationsfehler
+- `2`: Sicherheitsprüfung fehlgeschlagen
+- `3`: unerwarteter Laufzeitfehler
 
 ---
 

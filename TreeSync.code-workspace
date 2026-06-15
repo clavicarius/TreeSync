@@ -1,0 +1,21 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "dotnet.defaultSolution": "TreeSync.sln",
+    "cSpell.words": [
+      "clausTrarius",
+      "csdevkit",
+      "ms-dotnettools"
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-dotnettools.csdevkit",
+      "ms-dotnettools.csharp"
+    ]
+  }
+}

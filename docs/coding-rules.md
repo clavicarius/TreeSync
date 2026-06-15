@@ -3,86 +3,58 @@
 ## Ziel dieser Regeln
 
 Diese Coding Rules stellen sicher, dass Implementierungen des Projekts:
-
 - konsistent bleiben
-
 - der definierten Architektur folgen
-
 - keine funktionalen Anforderungen verändern
-
 - vorhersehbar wartbar bleiben
-
 Diese Regeln gelten für menschliche Entwickler ebenso wie für AI‑Codegeneratoren.
-
 Wenn Unklarheiten auftreten, gelten immer die Spezifikationen in:
-
 - `docs/sync-logic.md`
-
 - `docs/algorithm.md`
-
 - `docs/architecture.md`
-
 ---
-
 # Allgemeine Entwicklungsprinzipien
-
 ## Architektur nicht verändern
-
 Die in `docs/architecture.md` definierte Modulstruktur ist verbindlich.
-
 Neue Funktionen dürfen ergänzt werden, aber:
-
 - bestehende Module dürfen nicht zusammengelegt werden
-
 - Verantwortlichkeiten dürfen nicht vermischt werden
-
 - die Sync-Logik muss in `SyncEngine.cs` bleiben
-
 ---
-
 ## Single Responsibility
-
 Jedes Modul hat genau eine Hauptverantwortung.
-
 Beispiele:
-
 - `IgnoreRuleSet.cs` → nur Ignore-Regeln
-
 - `TreeSyncConfig.cs` → nur Konfiguration
-
 - `SyncEngine.cs` → nur Synchronisation
-
 Module dürfen keine versteckten Seiteneffekte erzeugen.
-
 ---
-
 ## Keine versteckte Logik
-
 Die Kernentscheidungen müssen ausschließlich in der Sync-Engine stattfinden.
-
 Insbesondere:
-
 - Kopieren
-
 - Aktualisieren
-
 - Löschen
-
 dürfen nicht in Hilfsfunktionen versteckt sein.
-
 ---
-
 # C#/.NET Coding Style
-
 ## .NET Version
-
 Mindestens:
-
 ```
-
 .NET 10 SDK
-
 ```
+---
+## Default Namespace
+Der Default Namespace aller Projekte ist:
+```
+clausTrarius.TreeSync
+```
+
+Modulbezogene Namespaces müssen davon abgeleitet werden, zum Beispiel:
+
+- `clausTrarius.TreeSync.Cli`
+- `clausTrarius.TreeSync.Core`
+- `clausTrarius.TreeSync.Tests`
 
 ---
 
