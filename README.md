@@ -1,6 +1,6 @@
-# README.md
+# TreeSync
 
-## Projekt: treesync
+![logo](.assets/TreeSync-Social-Logo.png)
 
 `treesync` ist ein CLI-Tool in C# auf Basis von .NET 10 zum synchronen Copy-Deployment einer Verzeichnisstruktur.
 
