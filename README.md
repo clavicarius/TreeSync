@@ -102,6 +102,54 @@ Dry Run:
   --dry-run
 ```
 
+## Nutzung unter Linux
+
+Für Linux steht zusätzlich ein self-contained `linux-x64`-Build zur Verfügung:
+
+```bash
+dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj \
+  --configuration Release \
+  --runtime linux-x64 \
+  --self-contained true \
+  -p:PublishSingleFile=true \
+  -p:EnableCompressionInSingleFile=true \
+  -p:DebugType=none \
+  -p:DebugSymbols=false \
+  --output publish/linux-x64
+```
+
+Danach kann das Binary direkt gestartet werden:
+
+```bash
+./publish/linux-x64/TreeSync \
+  --source ./src \
+  --target /var/www/app \
+  --config ./config.json \
+  --ignore ./.treesyncignore \
+  --log ./treesync.log \
+  --log-level info
+```
+
+## Nutzung mit installierter .NET Runtime
+
+Für Systeme mit installierter .NET 10 Runtime gibt es zusätzlich ein framework-dependent Paket:
+
+```bash
+dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj \
+  --configuration Release \
+  --self-contained false \
+  -p:UseAppHost=false \
+  --output publish/dotnet
+```
+
+Start:
+
+```bash
+dotnet ./publish/dotnet/TreeSync.dll \
+  --source ./src \
+  --target /var/www/app
+```
+
 ---
 
 ## Beispielaufruf
@@ -146,7 +194,9 @@ dotnet build TreeSync.sln --configuration Release
 dotnet test TreeSync.sln --configuration Release
 ```
 
-`dotnet build` ist für Entwicklung und Tests gedacht. Für eine verteilbare `.exe` bitte `dotnet publish` wie oben verwenden.
+`dotnet build` ist für Entwicklung und Tests gedacht. Für verteilbare Windows-, Linux- oder `.NET`-Artefakte bitte `dotnet publish` wie oben verwenden.
+
+Releases enthalten zusätzlich ein Linux-Artefakt (`TreeSync-<version>-linux-x64.tar.gz`) sowie ein framework-dependent `.NET`-Paket (`TreeSync-<version>-dotnet.zip`).
 
 ---
 
@@ -172,7 +222,7 @@ Die Workspace-Konfiguration liegt in `.vscode/`:
 - `settings.json`: `TreeSync.sln` als Default-Solution
 - `extensions.json`: empfohlene C#/.NET-Erweiterungen
 
-Der Publish-Task `publish: win-x64 folder` erzeugt die Dateien im Ordner `publish`.
+Die Publish-Tasks erzeugen Windows-, Linux- und framework-dependent `.NET`-Artefakte im Ordner `publish`.
 
 ---
 
