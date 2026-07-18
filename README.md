@@ -247,22 +247,22 @@ Wenn nicht anders angegeben, erwartet das Tool folgende Dateien im Root der Quel
 
 ## Konfiguration
 
-Siehe: `docs/configuration.md`
+Siehe: [`docs/configuration.md`](docs/configuration.md)
 
 ---
 
 ## Ignore-Regeln
 
-Siehe: `docs/ignore-rules.md`
+Siehe: [`docs/ignore-rules.md`](docs/ignore-rules.md)
 
 ---
 
 ## Synchronisationslogik
 
-Siehe: `docs/sync-logic.md`
+Siehe: [`docs/sync-logic.md`](docs/sync-logic.md)
 
 ---
 
 ## CLI-Interface
 
-Siehe: `docs/cli.md`
+Siehe: [`docs/cli.md`](docs/cli.md)
