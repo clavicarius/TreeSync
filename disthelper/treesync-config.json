@@ -3,15 +3,13 @@
     ".php",
     ".js",
     ".css",
-	".html",
+    ".html",
     ".jpg",
     ".png",
     ".woff",
     ".woff2",
     ".treesyncme",
-	".htaccess",
-	".conf"
-	
+    ".conf"
   ],
   "logging": {
     "level": "info"
