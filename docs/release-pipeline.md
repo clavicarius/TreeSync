@@ -25,7 +25,11 @@ Für die GitHub-Pipeline verwendet TreeSync die moderne .NET-Toolchain:
 - `App.config` wird nicht benötigt
 - `Properties/AssemblyInfo.cs` wird nicht benötigt
 
-Das Release-Artefakt wird bewusst als Windows-x64-EXE gebaut, weil die erste Distribution als direkt startbare Windows-CLI erfolgen soll.
+Die Release-Pipeline erzeugt drei Distributionsvarianten:
+
+- `win-x64` als self-contained Single-File-EXE
+- `linux-x64` als self-contained Single-File-Binary
+- `.NET` als framework-dependent Paket für Systeme mit installierter .NET 10 Runtime
 
 ## Workflow-Dateien
 
@@ -51,10 +55,14 @@ Ablauf:
 5. `dotnet test TreeSync.sln --configuration Release`
 6. Windows-x64-Artefakt veröffentlichen
 7. Smoke-Test mit `TreeSync.exe --help`
+8. Linux-x64-Artefakt veröffentlichen
+9. Smoke-Test mit `./TreeSync --help`
+10. framework-dependent `.NET`-Artefakt veröffentlichen
+11. Smoke-Test mit `dotnet TreeSync.dll --help`
 
 Die CI erstellt keinen GitHub Release.
 
-Der Publish-Schritt in der CI dient nur dem Smoke-Test. Dadurch wird geprüft, ob das spätere Release-Artefakt grundsätzlich gebaut und gestartet werden kann.
+Die Publish-Schritte in der CI dienen nur dem Smoke-Test. Dadurch wird geprüft, ob alle späteren Release-Artefakte grundsätzlich gebaut und gestartet werden können.
 
 ## Release
 
@@ -70,28 +78,37 @@ Ablauf:
 
 1. Tag wird gepusht
 2. GitHub Actions startet den Release-Workflow
-3. TreeSync wird für `win-x64` veröffentlicht
-4. Das Artefakt wird self-contained und als Single-File-EXE gebaut
-5. Die veröffentlichte EXE wird mit `--help` gestartet
-6. EXE und README werden in ein ZIP gepackt
+3. TreeSync wird für `win-x64`, `linux-x64` und `.NET` veröffentlicht
+4. Die Windows- und Linux-Artefakte werden self-contained und als Single-File-Binaries gebaut
+5. Die Linux- und `.NET`-Artefakte werden mit `--help` gestartet
+6. Windows-EXE und `.NET`-Paket werden als ZIP gebaut, das Linux-Binary als `tar.gz`
 7. GitHub Release wird als Draft erstellt
-8. ZIP wird an den Draft Release angehängt
+8. Alle Distributionsdateien werden an den Draft Release angehängt
 9. Release Notes werden manuell anhand von `CHANGELOG.md` geprüft und veröffentlicht
 
 ## Artefakt
 
-Für Tag `v1.2.3` entsteht:
+Für Tag `v1.2.3` entstehen:
 
 ```text
 TreeSync-1.2.3-win-x64.zip
+TreeSync-1.2.3-linux-x64.tar.gz
+TreeSync-1.2.3-dotnet.zip
 ```
 
-Das ZIP enthält:
+`TreeSync-1.2.3-win-x64.zip` enthält:
 
 - `TreeSync.exe`
 - `README.md`
 
-Die EXE ist self-contained und benötigt auf dem Zielsystem keine installierte .NET Runtime.
+`TreeSync-1.2.3-linux-x64.tar.gz` enthält:
+
+- `TreeSync`
+- `README.md`
+
+`TreeSync-1.2.3-dotnet.zip` enthält die veröffentlichte CLI inklusive `TreeSync.dll`, `TreeSync.runtimeconfig.json`, `TreeSync.deps.json` und `README.md`.
+
+Die Windows- und Linux-Binaries sind self-contained und benötigen auf dem Zielsystem keine installierte .NET Runtime. Das `.NET`-Paket setzt eine installierte .NET 10 Runtime voraus.
 
 ## Versionierung
 
@@ -109,6 +126,8 @@ Beispiel:
 Tag:                  v1.2.3
 InformationalVersion: 1.2.3
 ZIP-Datei:            TreeSync-1.2.3-win-x64.zip
+Linux-Datei:          TreeSync-1.2.3-linux-x64.tar.gz
+.NET-Datei:           TreeSync-1.2.3-dotnet.zip
 ```
 
 ## Lokale Validierung
@@ -129,10 +148,32 @@ dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj `
   -p:DebugSymbols=false
 ```
 
+```bash
+dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj \
+  --configuration Release \
+  --runtime linux-x64 \
+  --self-contained true \
+  -p:PublishSingleFile=true \
+  -p:EnableCompressionInSingleFile=true \
+  -p:DebugType=none \
+  -p:DebugSymbols=false \
+  --output publish/linux-x64
+dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj \
+  --configuration Release \
+  --self-contained false \
+  -p:UseAppHost=false \
+  --output publish/dotnet
+```
+
 Optionaler Smoke-Test nach lokalem Publish:
 
 ```powershell
 .\src\TreeSync.Cli\bin\Release\net10.0\win-x64\publish\TreeSync.exe --help
+```
+
+```bash
+./publish/linux-x64/TreeSync --help
+dotnet ./publish/dotnet/TreeSync.dll --help
 ```
 
 ## Changelog und Release Notes
@@ -154,17 +195,17 @@ git tag v1.2.3
 git push origin v1.2.3
 ```
 
-Der Push des Tags startet den Release-Workflow. Der Workflow erzeugt das ZIP-Artefakt und hängt es an den automatisch erstellten Draft Release an.
+Der Push des Tags startet den Release-Workflow. Der Workflow erzeugt die Release-Artefakte und hängt sie an den automatisch erstellten Draft Release an.
 
 Da der Remote-Zugriff per SSH-Key passphrase-geschützt ist, müssen `git push`, `git pull` und `git fetch` in einer lokal freigegebenen Shell ausgeführt werden.
 
 ## Designentscheidungen
 
 - Kein NuGet-Paket
-- Distribution als CLI/EXE
-- Windows-x64-Release-Artefakt für die erste Distribution
+- Distribution als CLI-Binaries plus framework-dependent `.NET`-Paket
+- Windows- und Linux-x64-Release-Artefakte
 - Self-contained Single-File-Binary für einfache Nutzung
-- Tests plus Smoke-Test gegen die veröffentlichte EXE
+- Tests plus Smoke-Tests gegen alle veröffentlichten Varianten
 - Draft Release statt automatischer Veröffentlichung
 
 ## Reproduzierbarkeit
@@ -173,5 +214,5 @@ Releases werden bestimmt durch:
 
 - Git-Tag
 - .NET 10 SDK (`10.0.x`)
-- GitHub Actions Runner `windows-latest`
-- Runtime Identifier `win-x64`
+- GitHub Actions Runner `windows-latest` und `ubuntu-latest`
+- Runtime Identifier `win-x64` und `linux-x64`
