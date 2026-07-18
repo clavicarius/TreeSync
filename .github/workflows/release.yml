@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -59,19 +59,61 @@ jobs:
           -p:InformationalVersion=${{ steps.version.outputs.version }}
           --output artifacts/publish/win-x64
 
-      - name: Smoke test
-        shell: pwsh
-        run: .\artifacts\publish\win-x64\TreeSync.exe --help
+      - name: Publish linux-x64
+        run: >
+          dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj
+          --configuration Release
+          --runtime linux-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:EnableCompressionInSingleFile=true
+          -p:DebugType=none
+          -p:DebugSymbols=false
+          -p:InformationalVersion=${{ steps.version.outputs.version }}
+          --output artifacts/publish/linux-x64
 
-      - name: Create ZIP artifact
+      - name: Publish .NET variant
+        run: >
+          dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj
+          --configuration Release
+          --self-contained false
+          -p:UseAppHost=false
+          -p:InformationalVersion=${{ steps.version.outputs.version }}
+          --output artifacts/publish/dotnet
+
+      - name: Smoke test linux-x64
+        run: ./artifacts/publish/linux-x64/TreeSync --help
+
+      - name: Smoke test .NET
+        run: dotnet ./artifacts/publish/dotnet/TreeSync.dll --help
+
+      - name: Create win-x64 ZIP artifact
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force artifacts/package, dist | Out-Null
-          Copy-Item artifacts/publish/win-x64/TreeSync.exe artifacts/package/
-          Copy-Item README.md artifacts/package/
+          New-Item -ItemType Directory -Force artifacts/package/win-x64, dist | Out-Null
+          Copy-Item artifacts/publish/win-x64/TreeSync.exe artifacts/package/win-x64/
+          Copy-Item README.md artifacts/package/win-x64/
           Compress-Archive `
-            -Path artifacts/package/* `
+            -Path artifacts/package/win-x64/* `
             -DestinationPath "dist/${{ steps.version.outputs.zip_name }}" `
+            -Force
+
+      - name: Create linux-x64 tar.gz artifact
+        run: |
+          mkdir -p artifacts/package/linux-x64 dist
+          cp artifacts/publish/linux-x64/TreeSync artifacts/package/linux-x64/
+          cp README.md artifacts/package/linux-x64/
+          tar -C artifacts/package/linux-x64 -czf dist/TreeSync-${{ steps.version.outputs.version }}-linux-x64.tar.gz .
+
+      - name: Create .NET ZIP artifact
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artifacts/package/dotnet, dist | Out-Null
+          Copy-Item artifacts/publish/dotnet/* artifacts/package/dotnet/
+          Copy-Item README.md artifacts/package/dotnet/
+          Compress-Archive `
+            -Path artifacts/package/dotnet/* `
+            -DestinationPath "dist/TreeSync-${{ steps.version.outputs.version }}-dotnet.zip" `
             -Force
 
       - name: Create draft GitHub release
@@ -85,5 +127,8 @@ jobs:
             Draft release for TreeSync ${{ steps.version.outputs.version }}.
 
             Review release notes manually against CHANGELOG.md before publishing.
-          files: dist/${{ steps.version.outputs.zip_name }}
+          files: |
+            dist/${{ steps.version.outputs.zip_name }}
+            dist/TreeSync-${{ steps.version.outputs.version }}-linux-x64.tar.gz
+            dist/TreeSync-${{ steps.version.outputs.version }}-dotnet.zip
           fail_on_unmatched_files: true

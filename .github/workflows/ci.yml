@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  ci:
+  windows:
     runs-on: windows-latest
 
     steps:
@@ -44,3 +44,52 @@ jobs:
       - name: Smoke test
         shell: pwsh
         run: .\artifacts\publish\win-x64\TreeSync.exe --help
+
+  linux-and-dotnet:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore TreeSync.sln
+
+      - name: Build
+        run: dotnet build TreeSync.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test TreeSync.sln --configuration Release --no-build
+
+      - name: Publish smoke-test artifact (linux-x64)
+        run: >
+          dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj
+          --configuration Release
+          --runtime linux-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:EnableCompressionInSingleFile=true
+          -p:DebugType=none
+          -p:DebugSymbols=false
+          -p:InformationalVersion=ci.${{ github.run_number }}
+          --output artifacts/publish/linux-x64
+
+      - name: Smoke test (linux-x64)
+        run: ./artifacts/publish/linux-x64/TreeSync --help
+
+      - name: Publish smoke-test artifact (.NET)
+        run: >
+          dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj
+          --configuration Release
+          --self-contained false
+          -p:UseAppHost=false
+          -p:InformationalVersion=ci.${{ github.run_number }}
+          --output artifacts/publish/dotnet
+
+      - name: Smoke test (.NET)
+        run: dotnet ./artifacts/publish/dotnet/TreeSync.dll --help
