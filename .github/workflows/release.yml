@@ -93,6 +93,9 @@ jobs:
           New-Item -ItemType Directory -Force artifacts/package/win-x64, dist | Out-Null
           Copy-Item artifacts/publish/win-x64/TreeSync.exe artifacts/package/win-x64/
           Copy-Item README.md artifacts/package/win-x64/
+          Copy-Item disthelper/deploy.cmd artifacts/package/win-x64/
+          Copy-Item disthelper/treesync-ignore.txt artifacts/package/win-x64/
+          Copy-Item disthelper/treesync-config.json artifacts/package/win-x64/
           Compress-Archive `
             -Path artifacts/package/win-x64/* `
             -DestinationPath "dist/${{ steps.version.outputs.zip_name }}" `
