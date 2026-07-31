@@ -266,3 +266,9 @@ Siehe: [`docs/sync-logic.md`](docs/sync-logic.md)
 ## CLI-Interface
 
 Siehe: [`docs/cli.md`](docs/cli.md)
+
+---
+
+## Copyright & License
+
+© 2024 clausTrarius. Licensed under MIT.

@@ -48,7 +48,21 @@ public sealed class CliOptionsTests
         CliOptions options = CliOptions.Parse(new[] { "--help" });
 
         Assert.True(options.HelpRequested);
+        Assert.False(options.VersionRequested);
         Assert.Contains("Usage:", CliOptions.GetHelpText());
+        Assert.Contains("--version", CliOptions.GetHelpText());
+        Assert.Contains("© 2024 clausTrarius. Licensed under MIT.", CliOptions.GetHelpText());
+    }
+
+    [Fact]
+    public void Parse_AcceptsVersionWithoutRequiredParameters()
+    {
+        CliOptions options = CliOptions.Parse(new[] { "--version" });
+
+        Assert.False(options.HelpRequested);
+        Assert.True(options.VersionRequested);
+        Assert.StartsWith("TreeSync ", CliOptions.GetVersionText());
+        Assert.Contains("© 2024 clausTrarius. Licensed under MIT.", CliOptions.GetVersionText());
     }
 
     [Fact]
