@@ -63,10 +63,32 @@ dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj `
   -p:DebugSymbols=false
 ```
 
-Smoke-Test:
+```bash
+dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj \
+  --configuration Release \
+  --runtime linux-x64 \
+  --self-contained true \
+  -p:PublishSingleFile=true \
+  -p:EnableCompressionInSingleFile=true \
+  -p:DebugType=none \
+  -p:DebugSymbols=false \
+  --output publish/linux-x64
+dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj \
+  --configuration Release \
+  --self-contained false \
+  -p:UseAppHost=false \
+  --output publish/dotnet
+```
+
+Smoke-Tests:
 
 ```powershell
 .\src\TreeSync.Cli\bin\Release\net10.0\win-x64\publish\TreeSync.exe --help
+```
+
+```bash
+./publish/linux-x64/TreeSync --help
+dotnet ./publish/dotnet/TreeSync.dll --help
 ```
 
 ## 4. Release-Commit Erstellen
@@ -101,7 +123,7 @@ Nach erfolgreichem Workflow-Lauf:
 
 1. Öffne [GitHub Releases](https://github.com/claustrarius/treesync/releases)
 2. Öffne den Draft Release für den Tag
-3. Prüfe das ZIP-Artefakt, z. B. `TreeSync-1.2.3-win-x64.zip`
+3. Prüfe die Release-Artefakte, z. B. `TreeSync-1.2.3-win-x64.zip`, `TreeSync-1.2.3-linux-x64.tar.gz` und `TreeSync-1.2.3-dotnet.zip`
 4. Kopiere oder prüfe die Release Notes anhand von `CHANGELOG.md`
 5. Veröffentliche den Release manuell
 

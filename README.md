@@ -1,6 +1,6 @@
-# README.md
+# TreeSync
 
-## Projekt: treesync
+![logo](./assets/TreeSync-Social-Logo.png)
 
 `treesync` ist ein CLI-Tool in C# auf Basis von .NET 10 zum synchronen Copy-Deployment einer Verzeichnisstruktur.
 
@@ -102,6 +102,54 @@ Dry Run:
   --dry-run
 ```
 
+## Nutzung unter Linux
+
+Für Linux steht zusätzlich ein self-contained `linux-x64`-Build zur Verfügung:
+
+```bash
+dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj \
+  --configuration Release \
+  --runtime linux-x64 \
+  --self-contained true \
+  -p:PublishSingleFile=true \
+  -p:EnableCompressionInSingleFile=true \
+  -p:DebugType=none \
+  -p:DebugSymbols=false \
+  --output publish/linux-x64
+```
+
+Danach kann das Binary direkt gestartet werden:
+
+```bash
+./publish/linux-x64/TreeSync \
+  --source ./src \
+  --target /var/www/app \
+  --config ./config.json \
+  --ignore ./.treesyncignore \
+  --log ./treesync.log \
+  --log-level info
+```
+
+## Nutzung mit installierter .NET Runtime
+
+Für Systeme mit installierter .NET 10 Runtime gibt es zusätzlich ein framework-dependent Paket:
+
+```bash
+dotnet publish src/TreeSync.Cli/TreeSync.Cli.csproj \
+  --configuration Release \
+  --self-contained false \
+  -p:UseAppHost=false \
+  --output publish/dotnet
+```
+
+Start:
+
+```bash
+dotnet ./publish/dotnet/TreeSync.dll \
+  --source ./src \
+  --target /var/www/app
+```
+
 ---
 
 ## Beispielaufruf
@@ -146,7 +194,22 @@ dotnet build TreeSync.sln --configuration Release
 dotnet test TreeSync.sln --configuration Release
 ```
 
-`dotnet build` ist für Entwicklung und Tests gedacht. Für eine verteilbare `.exe` bitte `dotnet publish` wie oben verwenden.
+`dotnet build` ist für Entwicklung und Tests gedacht. Für verteilbare Windows-, Linux- oder `.NET`-Artefakte bitte `dotnet publish` wie oben verwenden.
+
+Releases enthalten zusätzlich ein Linux-Artefakt (`TreeSync-<version>-linux-x64.tar.gz`) sowie ein framework-dependent `.NET`-Paket (`TreeSync-<version>-dotnet.zip`).
+
+---
+
+## Release
+
+Releases werden über Git-Tags im Format `vMAJOR.MINOR.PATCH` erstellt:
+
+```powershell
+git tag v1.2.3
+git push origin v1.2.3
+```
+
+Der Tag-Push startet den GitHub Actions Release-Workflow. Details stehen in `docs/release-pipeline.md` und `docs/create-release.md`.
 
 ---
 
@@ -172,7 +235,7 @@ Die Workspace-Konfiguration liegt in `.vscode/`:
 - `settings.json`: `TreeSync.sln` als Default-Solution
 - `extensions.json`: empfohlene C#/.NET-Erweiterungen
 
-Der Publish-Task `publish: win-x64 folder` erzeugt die Dateien im Ordner `publish`.
+Die Publish-Tasks erzeugen Windows-, Linux- und framework-dependent `.NET`-Artefakte im Ordner `publish`.
 
 ---
 
@@ -197,22 +260,22 @@ Wenn nicht anders angegeben, erwartet das Tool folgende Dateien im Root der Quel
 
 ## Konfiguration
 
-Siehe: `docs/configuration.md`
+Siehe: [`docs/configuration.md`](docs/configuration.md)
 
 ---
 
 ## Ignore-Regeln
 
-Siehe: `docs/ignore-rules.md`
+Siehe: [`docs/ignore-rules.md`](docs/ignore-rules.md)
 
 ---
 
 ## Synchronisationslogik
 
-Siehe: `docs/sync-logic.md`
+Siehe: [`docs/sync-logic.md`](docs/sync-logic.md)
 
 ---
 
 ## CLI-Interface
 
-Siehe: `docs/cli.md`
+Siehe: [`docs/cli.md`](docs/cli.md)

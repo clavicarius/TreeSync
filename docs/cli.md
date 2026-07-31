@@ -46,7 +46,37 @@ publish\TreeSync.exe
 publish\TreeSync.dll
 ```
 
-`dotnet build` ist für Entwicklung und Tests gedacht. Für eine verteilbare `.exe` muss `dotnet publish` verwendet werden.
+`dotnet build` ist für Entwicklung und Tests gedacht. Für verteilbare Windows-, Linux- oder `.NET`-Artefakte muss `dotnet publish` verwendet werden.
+
+Beispiel für eine Linux-x64-Version:
+
+```bash
+dotnet publish ./src/TreeSync.Cli/TreeSync.Cli.csproj \
+  -c Release \
+  --runtime linux-x64 \
+  --self-contained true \
+  -p:PublishSingleFile=true \
+  -p:EnableCompressionInSingleFile=true \
+  -p:DebugType=none \
+  -p:DebugSymbols=false \
+  --output ./publish/linux-x64
+```
+
+Beispiel für eine framework-dependent `.NET`-Version:
+
+```bash
+dotnet publish ./src/TreeSync.Cli/TreeSync.Cli.csproj \
+  -c Release \
+  --self-contained false \
+  -p:UseAppHost=false \
+  --output ./publish/dotnet
+```
+
+Start der framework-dependent Variante:
+
+```bash
+dotnet ./publish/dotnet/TreeSync.dll --help
+```
 
 ---
 
