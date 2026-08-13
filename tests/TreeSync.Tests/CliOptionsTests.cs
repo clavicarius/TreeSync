@@ -46,23 +46,36 @@ public sealed class CliOptionsTests
     public void Parse_AcceptsHelpWithoutRequiredParameters()
     {
         CliOptions options = CliOptions.Parse(new[] { "--help" });
+        string copyrightNotice = CliOptions.GetCopyrightNotice();
 
         Assert.True(options.HelpRequested);
         Assert.False(options.VersionRequested);
         Assert.Contains("Usage:", CliOptions.GetHelpText());
         Assert.Contains("--version", CliOptions.GetHelpText());
-        Assert.Contains("© 2024 clausTrarius. Licensed under MIT.", CliOptions.GetHelpText());
+        Assert.Contains(copyrightNotice, CliOptions.GetHelpText());
     }
 
     [Fact]
     public void Parse_AcceptsVersionWithoutRequiredParameters()
     {
         CliOptions options = CliOptions.Parse(new[] { "--version" });
+        string copyrightNotice = CliOptions.GetCopyrightNotice();
 
         Assert.False(options.HelpRequested);
         Assert.True(options.VersionRequested);
         Assert.StartsWith("TreeSync ", CliOptions.GetVersionText());
-        Assert.Contains("© 2024 clausTrarius. Licensed under MIT.", CliOptions.GetVersionText());
+        Assert.Contains(copyrightNotice, CliOptions.GetVersionText());
+    }
+
+    [Fact]
+    public void GetCopyrightNotice_UsesYearRangeFrom2024ToCurrentUtcYear()
+    {
+        string copyrightNotice = CliOptions.GetCopyrightNotice();
+        string expectedYearText = DateTime.UtcNow.Year > 2024
+            ? $"2024-{DateTime.UtcNow.Year}"
+            : "2024";
+
+        Assert.Equal($"© {expectedYearText} clausTrarius. Licensed under MIT.", copyrightNotice);
     }
 
     [Fact]

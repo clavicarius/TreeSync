@@ -5,7 +5,7 @@ namespace clausTrarius.TreeSync.Cli;
 
 public sealed class CliOptions
 {
-    private const string CopyrightNotice = "© 2024 clausTrarius. Licensed under MIT.";
+    private const int CopyrightStartYear = 2024;
 
     private CliOptions(
         string sourcePath,
@@ -139,7 +139,7 @@ public sealed class CliOptions
 
     public static string GetHelpText()
     {
-        return """
+        return $$"""
             TreeSync - synchronizes filtered source files into a target directory.
 
             Usage:
@@ -158,7 +158,7 @@ public sealed class CliOptions
               --help                Show this help text
               --version             Show version and copyright information
 
-            © 2024 clausTrarius. Licensed under MIT.
+            {{GetCopyrightNotice()}}
             """;
     }
 
@@ -174,7 +174,17 @@ public sealed class CliOptions
             version = version[..metadataSeparatorIndex];
         }
 
-        return $"TreeSync {version}{Environment.NewLine}{CopyrightNotice}";
+        return $"TreeSync {version}{Environment.NewLine}{GetCopyrightNotice()}";
+    }
+
+    public static string GetCopyrightNotice()
+    {
+        int currentYear = DateTime.UtcNow.Year;
+        string yearText = currentYear > CopyrightStartYear
+            ? $"{CopyrightStartYear}-{currentYear}"
+            : CopyrightStartYear.ToString();
+
+        return $"© {yearText} clausTrarius. Licensed under MIT.";
     }
 
     private static string Require(IReadOnlyDictionary<string, string?> values, string optionName)

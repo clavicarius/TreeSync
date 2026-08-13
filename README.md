@@ -271,4 +271,4 @@ Siehe: [`docs/cli.md`](docs/cli.md)
 
 ## Copyright & License
 
-© 2024 clausTrarius. Licensed under MIT.
+© 2024-2026 clausTrarius. Licensed under MIT.
