@@ -5,7 +5,7 @@
 ## Grundsyntax
 
 ```text
-treesync --source <path> --target <path> [options]
+TreeSync --source <path> --target <path> [options]
 ```
 
 ## Parameter
@@ -58,7 +58,7 @@ dotnet ./publish/dotnet/TreeSync.dll \
 Dry Run:
 
 ```bash
-treesync --source ./src --target /var/www/app --dry-run
+TreeSync --source ./src --target /var/www/app --dry-run
 ```
 
 ## Exitcodes
