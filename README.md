@@ -27,7 +27,7 @@ Das Zielverzeichnis stellt damit stets eine synchronisierte Kopie der Quelle dar
 ## Beispielaufruf
 
 ```bash
-treesync \
+./TreeSync \
   --source ./src \
   --target /var/www/app \
   --config ./config.json \
@@ -39,7 +39,7 @@ treesync \
 Dry Run:
 
 ```bash
-treesync --source ./src --target /var/www/app --dry-run
+./TreeSync --source ./src --target /var/www/app --dry-run
 ```
 
 ---
