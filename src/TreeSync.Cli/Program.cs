@@ -155,6 +155,6 @@ public static class ProgramRunner
             return argument;
         }
 
-        return $"\"{argument.Replace("\\", "\\\\").Replace("\"", "\\\"")}\"";
+        return $"\"{argument.Replace("\"", "\\\"")}\"";
     }
 }
