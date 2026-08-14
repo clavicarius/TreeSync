@@ -2,11 +2,28 @@
 
 ## CLI Interface
 
-### Nutzung als EXE
+## Grundsyntax
 
-Die produktive Nutzung erfolgt über die veröffentlichte `TreeSync.exe`.
+```text
+treesync --source <path> --target <path> [options]
+```
 
-Beispiel:
+## Parameter
+
+| Parameter | Pflicht | Beschreibung | Standard |
+| --- | --- | --- | --- |
+| `--source <path>` | ja | Pfad zum Quellverzeichnis | - |
+| `--target <path>` | ja | Pfad zum Zielverzeichnis | - |
+| `--config <file>` | nein | Pfad zur Konfigurationsdatei | `<source>/config.json` |
+| `--ignore <file>` | nein | Pfad zur Ignore-Datei | `<source>/.treesyncignore` |
+| `--log <file>` | nein | Pfad zur Logdatei | `treesync.log` im aktuellen Arbeitsverzeichnis |
+| `--log-level <level>` | nein | Logging-Level (`error`, `info`, `debug`) | Wert aus Konfiguration |
+| `--dry-run` | nein | Simuliert alle Aktionen ohne Dateisystem-Änderungen | `false` |
+| `--help`, `-h`, `/?` | nein | Zeigt die Hilfe an | `false` |
+
+## Beispielaufrufe
+
+Windows (EXE):
 
 ```powershell
 .\TreeSync.exe `
@@ -18,20 +35,49 @@ Beispiel:
   --log-level info
 ```
 
-Dry Run:
+Linux (self-contained):
 
-```powershell
-.\TreeSync.exe `
-  --source "C:\pfad\zur\quelle" `
-  --target "C:\pfad\zum\ziel" `
-  --dry-run
+```bash
+./publish/linux-x64/TreeSync \
+  --source ./src \
+  --target /var/www/app \
+  --config ./config.json \
+  --ignore ./.treesyncignore \
+  --log ./treesync.log \
+  --log-level info
 ```
 
----
+Framework-dependent (.NET Runtime installiert):
 
-### Publish
+```bash
+dotnet ./publish/dotnet/TreeSync.dll \
+  --source ./src \
+  --target /var/www/app
+```
 
-Beispiel für eine Windows-x64-EXE:
+Dry Run:
+
+```bash
+treesync --source ./src --target /var/www/app --dry-run
+```
+
+## Exitcodes
+
+- `0`: Erfolg
+- `1`: CLI- oder Konfigurationsfehler
+- `2`: Sicherheitsprüfung fehlgeschlagen
+- `3`: Unerwarteter Laufzeitfehler
+
+## Standarddateien
+
+Wenn nicht anders angegeben, werden folgende Dateien im Root der Quelle erwartet:
+
+- `config.json`
+- `.treesyncignore`
+
+## Publish
+
+Windows-x64-EXE:
 
 ```powershell
 dotnet publish .\src\TreeSync.Cli\TreeSync.Cli.csproj `
@@ -39,16 +85,7 @@ dotnet publish .\src\TreeSync.Cli\TreeSync.Cli.csproj `
   -p:PublishProfile=win-x64-folder
 ```
 
-Die EXE und DLL liegen danach unter:
-
-```text
-publish\TreeSync.exe
-publish\TreeSync.dll
-```
-
-`dotnet build` ist für Entwicklung und Tests gedacht. Für verteilbare Windows-, Linux- oder `.NET`-Artefakte muss `dotnet publish` verwendet werden.
-
-Beispiel für eine Linux-x64-Version:
+Linux-x64 (self-contained):
 
 ```bash
 dotnet publish ./src/TreeSync.Cli/TreeSync.Cli.csproj \
@@ -62,7 +99,7 @@ dotnet publish ./src/TreeSync.Cli/TreeSync.Cli.csproj \
   --output ./publish/linux-x64
 ```
 
-Beispiel für eine framework-dependent `.NET`-Version:
+Framework-dependent `.NET`:
 
 ```bash
 dotnet publish ./src/TreeSync.Cli/TreeSync.Cli.csproj \
@@ -72,100 +109,4 @@ dotnet publish ./src/TreeSync.Cli/TreeSync.Cli.csproj \
   --output ./publish/dotnet
 ```
 
-Start der framework-dependent Variante:
-
-```bash
-dotnet ./publish/dotnet/TreeSync.dll --help
-```
-
----
-
-### Grundsyntax
-
-```
-
-treesync --source <path> --target <path> \[options]
-
-```
-
-### Pflichtparameter
-
-`--source <path>`
-
-Pfad zum Quellverzeichnis.
-
-`--target <path>`
-
-Pfad zum Zielverzeichnis.
-
----
-
-### Optionale Parameter
-
-`--config <file>`
-
-Pfad zur Konfigurationsdatei.
-
-Standard:
-
-```
-
-config.json
-
-```
-
-im Root der Quelle.
-
----
-
-`--ignore <file>`
-
-Pfad zur Ignore-Datei.
-
-Standard:
-
-```
-
-.treesyncignore
-
-```
-
-im Root der Quelle.
-
----
-
-`--log <file>`
-
-Pfad zur Logdatei.
-
-Standard:
-
-```
-
-treesync.log
-
-```
-
-im aktuellen Arbeitsverzeichnis.
-
----
-
-`--log-level <level>`
-
-Überschreibt den Logging-Level aus der Konfiguration.
-
-Mögliche Werte:
-
-- error
-
-- info
-
-- debug
-
----
-
-`--dry-run`
-
-Simuliert alle Aktionen ohne Änderungen am Dateisystem.
-
-Alle geplanten Aktionen werden trotzdem geloggt.
+`dotnet build` ist für Entwicklung und Tests gedacht. Für verteilbare Artefakte muss `dotnet publish` verwendet werden.
