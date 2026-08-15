@@ -61,4 +61,4 @@ Projektspezifische Entwicklungs- und Release-Details wurden in eigene Dateien au
 
 ## Copyright & License
 
-© 2024-present clausTrarius. Licensed under MIT.
+© 2024-present clavicarius. Licensed under MIT.

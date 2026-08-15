@@ -72,7 +72,7 @@ public sealed class CliOptionsTests
     {
         string copyrightNotice = CliOptions.GetCopyrightNotice();
 
-        Assert.Equal("© 2024-present clausTrarius. Licensed under MIT.", copyrightNotice);
+        Assert.Equal("© 2024-present clavicarius. Licensed under MIT.", copyrightNotice);
     }
 
     [Fact]
