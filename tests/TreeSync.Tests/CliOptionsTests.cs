@@ -68,14 +68,11 @@ public sealed class CliOptionsTests
     }
 
     [Fact]
-    public void GetCopyrightNotice_UsesYearRangeFrom2024ToCurrentUtcYear()
+    public void GetCopyrightNotice_UsesPresentSuffix()
     {
         string copyrightNotice = CliOptions.GetCopyrightNotice();
-        string expectedYearText = DateTime.UtcNow.Year > 2024
-            ? $"2024-{DateTime.UtcNow.Year}"
-            : "2024";
 
-        Assert.Equal($"© {expectedYearText} clausTrarius. Licensed under MIT.", copyrightNotice);
+        Assert.Equal("© 2024-present clausTrarius. Licensed under MIT.", copyrightNotice);
     }
 
     [Fact]

@@ -8,7 +8,7 @@ Diese Anleitung beschreibt das vollständige Vorgehen zum Erstellen eines neuen 
 - Git ist installiert und konfiguriert
 - .NET 10 SDK ist installiert
 - SSH-Key für GitHub ist eingerichtet
-- Schreibzugriff auf `git@github.com:claustrarius/treesync.git`
+- Schreibzugriff auf `git@github.com:clavicarius/TreeSync.git`
 
 ## Übersicht
 
@@ -112,7 +112,7 @@ Der Tag-Push startet den Release-Workflow.
 
 ## 6. GitHub Actions Prüfen
 
-1. Öffne [GitHub Actions](https://github.com/claustrarius/treesync/actions)
+1. Öffne [GitHub Actions](https://github.com/clavicarius/TreeSync/actions)
 2. Prüfe den Workflow-Lauf für den Tag, z. B. `v1.2.3`
 3. Warte, bis der Workflow erfolgreich abgeschlossen ist
 4. Prüfe bei Fehlern die Workflow-Logs
@@ -121,7 +121,7 @@ Der Tag-Push startet den Release-Workflow.
 
 Nach erfolgreichem Workflow-Lauf:
 
-1. Öffne [GitHub Releases](https://github.com/claustrarius/treesync/releases)
+1. Öffne [GitHub Releases](https://github.com/clavicarius/TreeSync/releases)
 2. Öffne den Draft Release für den Tag
 3. Prüfe die Release-Artefakte, z. B. `TreeSync-1.2.3-win-x64.zip`, `TreeSync-1.2.3-linux-x64.tar.gz` und `TreeSync-1.2.3-dotnet.zip`
 4. Kopiere oder prüfe die Release Notes anhand von `CHANGELOG.md`

@@ -5,7 +5,7 @@ namespace clausTrarius.TreeSync.Cli;
 
 public sealed class CliOptions
 {
-    private const int CopyrightStartYear = 2024;
+
 
     private CliOptions(
         string sourcePath,
@@ -179,12 +179,7 @@ public sealed class CliOptions
 
     public static string GetCopyrightNotice()
     {
-        int currentYear = DateTime.UtcNow.Year;
-        string yearText = currentYear > CopyrightStartYear
-            ? $"{CopyrightStartYear}-{currentYear}"
-            : CopyrightStartYear.ToString();
-
-        return $"© {yearText} clausTrarius. Licensed under MIT.";
+        return "© 2024-present clausTrarius. Licensed under MIT.";
     }
 
     private static string Require(IReadOnlyDictionary<string, string?> values, string optionName)
