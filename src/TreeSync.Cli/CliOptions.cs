@@ -179,7 +179,7 @@ public sealed class CliOptions
 
     public static string GetCopyrightNotice()
     {
-        return "© 2024-present clavicarius. Licensed under MIT.";
+        return "© 2024-2026 clavicarius. Licensed under MIT.";
     }
 
     private static string Require(IReadOnlyDictionary<string, string?> values, string optionName)

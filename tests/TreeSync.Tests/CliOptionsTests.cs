@@ -68,11 +68,11 @@ public sealed class CliOptionsTests
     }
 
     [Fact]
-    public void GetCopyrightNotice_UsesPresentSuffix()
+    public void GetCopyrightNotice_UsesBuildYear()
     {
         string copyrightNotice = CliOptions.GetCopyrightNotice();
 
-        Assert.Equal("© 2024-present clavicarius. Licensed under MIT.", copyrightNotice);
+        Assert.Equal("© 2024-2026 clavicarius. Licensed under MIT.", copyrightNotice);
     }
 
     [Fact]
