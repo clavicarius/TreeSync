@@ -29,6 +29,12 @@ public static class ProgramRunner
                 return 0;
             }
 
+            if (options.VersionRequested)
+            {
+                Console.Out.WriteLine(CliOptions.GetVersionText());
+                return 0;
+            }
+
             TreeSyncConfig config = TreeSyncConfig.Load(options.ConfigPath);
             TreeSyncLogLevel logLevel = options.LogLevelOverride ?? config.LogLevel;
 
