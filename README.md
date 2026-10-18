@@ -56,3 +56,9 @@ Projektspezifische Entwicklungs- und Release-Details wurden in eigene Dateien au
 - [`docs/sync-logic.md`](docs/sync-logic.md)
 - [`docs/create-release.md`](docs/create-release.md)
 - [`docs/release-pipeline.md`](docs/release-pipeline.md)
+
+---
+
+## Copyright & License
+
+© 2024-present clavicarius. Licensed under MIT.

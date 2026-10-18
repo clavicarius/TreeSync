@@ -46,9 +46,36 @@ public sealed class CliOptionsTests
     public void Parse_AcceptsHelpWithoutRequiredParameters()
     {
         CliOptions options = CliOptions.Parse(new[] { "--help" });
+        string copyrightNotice = CliOptions.GetCopyrightNotice();
 
         Assert.True(options.HelpRequested);
+        Assert.False(options.VersionRequested);
         Assert.Contains("Usage:", CliOptions.GetHelpText());
+        Assert.Contains("--version", CliOptions.GetHelpText());
+        Assert.Contains(copyrightNotice, CliOptions.GetHelpText());
+    }
+
+    [Fact]
+    public void Parse_AcceptsVersionWithoutRequiredParameters()
+    {
+        CliOptions options = CliOptions.Parse(new[] { "--version" });
+        string copyrightNotice = CliOptions.GetCopyrightNotice();
+
+        Assert.False(options.HelpRequested);
+        Assert.True(options.VersionRequested);
+        Assert.StartsWith("TreeSync ", CliOptions.GetVersionText());
+        Assert.Contains(copyrightNotice, CliOptions.GetVersionText());
+    }
+
+    [Fact]
+    public void GetCopyrightNotice_UsesCurrentYearRange()
+    {
+        int currentYear = System.DateTime.UtcNow.Year;
+        string expected = currentYear <= 2024
+            ? "© 2024 clavicarius. Licensed under MIT."
+            : $"© 2024-{currentYear} clavicarius. Licensed under MIT.";
+
+        Assert.Equal(expected, CliOptions.GetCopyrightNotice());
     }
 
     [Fact]
