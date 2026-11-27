@@ -1,9 +1,12 @@
 using clausTrarius.TreeSync.Core.Logging;
+using System.Reflection;
 
 namespace clausTrarius.TreeSync.Cli;
 
 public sealed class CliOptions
 {
+
+
     private CliOptions(
         string sourcePath,
         string targetPath,
@@ -12,7 +15,8 @@ public sealed class CliOptions
         string logFilePath,
         TreeSyncLogLevel? logLevelOverride,
         bool dryRun,
-        bool helpRequested)
+        bool helpRequested,
+        bool versionRequested)
     {
         SourcePath = sourcePath;
         TargetPath = targetPath;
@@ -22,6 +26,7 @@ public sealed class CliOptions
         LogLevelOverride = logLevelOverride;
         DryRun = dryRun;
         HelpRequested = helpRequested;
+        VersionRequested = versionRequested;
     }
 
     public string SourcePath { get; }
@@ -39,6 +44,8 @@ public sealed class CliOptions
     public bool DryRun { get; }
 
     public bool HelpRequested { get; }
+
+    public bool VersionRequested { get; }
 
     public static CliOptions Parse(string[] args, string? currentDirectory = null)
     {
@@ -61,7 +68,22 @@ public sealed class CliOptions
                     string.Empty,
                     null,
                     false,
-                    helpRequested: true);
+                    helpRequested: true,
+                    versionRequested: false);
+            }
+
+            if (IsVersionOption(argument))
+            {
+                return new CliOptions(
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    null,
+                    false,
+                    helpRequested: false,
+                    versionRequested: true);
             }
 
             if (string.Equals(argument, "--dry-run", StringComparison.OrdinalIgnoreCase))
@@ -111,12 +133,13 @@ public sealed class CliOptions
             Path.GetFullPath(logFilePath),
             logLevelOverride,
             dryRun,
-            helpRequested: false);
+            helpRequested: false,
+            versionRequested: false);
     }
 
     public static string GetHelpText()
     {
-        return """
+        return $$"""
             TreeSync - synchronizes filtered source files into a target directory.
 
             Usage:
@@ -133,7 +156,30 @@ public sealed class CliOptions
               --log-level <level>   error, info, or debug
               --dry-run             Log planned actions without changing files
               --help                Show this help text
+              --version             Show version and copyright information
+
+            {{GetCopyrightNotice()}}
             """;
+    }
+
+    public static string GetVersionText()
+    {
+        Assembly assembly = typeof(CliOptions).Assembly;
+        string version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+            ?? assembly.GetName().Version?.ToString()
+            ?? "unknown";
+        int metadataSeparatorIndex = version.IndexOf('+', StringComparison.Ordinal);
+        if (metadataSeparatorIndex >= 0)
+        {
+            version = version[..metadataSeparatorIndex];
+        }
+
+        return $"TreeSync {version}{Environment.NewLine}{GetCopyrightNotice()}";
+    }
+
+    public static string GetCopyrightNotice()
+    {
+        return "© 2024-2026 clavicarius. Licensed under MIT.";
     }
 
     private static string Require(IReadOnlyDictionary<string, string?> values, string optionName)
@@ -154,5 +200,10 @@ public sealed class CliOptions
     private static bool IsHelpOption(string option)
     {
         return option is "--help" or "-h" or "/?";
+    }
+
+    private static bool IsVersionOption(string option)
+    {
+        return option is "--version";
     }
 }
